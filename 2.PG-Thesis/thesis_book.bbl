@@ -1,0 +1,15 @@
+\begin{thebibliography}{1}
+\newcommand{\enquote}[1]{``#1''}
+
+\bibitem{Rida_19}
+Rida, I., Almaadeed, N. and Almaadeed, S.
+\newblock \enquote{Robust gait recognition: a comprehensive survey.}
+\newblock \emph{IET Biometrics}, volume~8, no.~1:pp. 14 -- 28, January 2019
+
+\bibitem{Kingma_15}
+Kingma, D.P. and Ba, J.
+\newblock \enquote{Adam: A method for stochastic optimization.}
+\newblock In \enquote{3rd Int. Conf. on Learning Representations,} San, Diego,
+  2015
+
+\end{thebibliography}

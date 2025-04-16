@@ -1,0 +1,289 @@
+% Be careful about changing styles
+\RequirePackage{graphicx}
+\RequirePackage{algorithmic}
+\RequirePackage{algorithm}
+\RequirePackage{mathtools}
+\RequirePackage{amsthm}
+\RequirePackage{amssymb}
+\RequirePackage{amsmath}
+\RequirePackage[a4paper, top=1.25in, bottom=1.0in, left=1.5in, right=1.0in]{geometry}
+\RequirePackage{times}
+\RequirePackage{cite}
+\RequirePackage{url}
+\RequirePackage{listings}
+\RequirePackage{multirow}
+\RequirePackage{svg}
+%\RequirePackage[acronym]{glossaries}
+\RequirePackage[nopostdot,style=super,nonumberlist,toc]{glossaries}
+
+\RequirePackage[final, colorlinks, linkcolor=black, citecolor=blue, urlcolor=black]{hyperref}
+
+% Prevent math from being upcased
+% http://tex.stackexchange.com/questions/46525/preventing-makeuppercase-from-affecting-mathematics
+\RequirePackage{textcase}
+\makeglossaries
+  
+% Definition macros
+
+\def\buet{Bangladesh University of Engineering and Technology}
+
+
+% sets spacing between paragraphs
+\parskip 2.5mm           
+
+% Clever referencing
+\RequirePackage{cleveref}
+
+% Caption setup
+\RequirePackage{caption} 
+\captionsetup[table]{skip=2.50mm}
+
+% 1.5 spacing
+\RequirePackage{setspace}
+\onehalfspacing
+\RequirePackage{xspace}
+
+% sets leading space for paragraphs
+\parindent 0.0mm		  
+
+
+% Read and store student names in DB
+\RequirePackage{datatool}
+\DTLloaddb[noheader]{Supervisor}{parameters/supervisor.txt}
+\DTLloaddb[noheader]{BOE}{parameters/boe.txt}
+
+% Thesis parameters
+
+
+
+% Thesis title page 
+\def\thesistitlepage{
+  \thispagestyle{empty}
+  \begin{center}
+    \vspace*{\stretch{2}}
+    \textbf{\Large\textsc{\thesistitle}}
+
+    \vspace*{\stretch{5}}
+    {\large by}\\
+    \vspace*{\stretch{1}}\large{\author}\\ 
+    \large \StudentID\\
+    \vspace*{\stretch{3}}
+    
+    {\large \MakeUppercase\degree}\\
+    {\large IN \\ \MakeUppercase\subject}\\
+    \vspace*{\stretch{4}}{\tiny.}\vspace*{\stretch{2}}
+    %\includegraphics[width=40mm]{figures/buetlogo}\\
+    \includesvg[width=30mm]{figures/BUET_logo_original.svg}\\
+    \large \department\\
+    {\large \buet}\\
+    \medskip
+    Dhaka, Bangladesh\\
+
+    \bigskip
+    \vspace*{\stretch{1}}
+    \thesisdate
+  \end{center}
+}
+
+
+
+% Thesis certification page
+\def\thesiscertificationpage{
+   \addcontentsline{toc}{chapter}{\textbf{Certification}}
+   
+  The thesis titled, \textbf{\lq\lq\thesistitle\rq\rq}, submitted by
+ \textbf{\author}, Roll No.: \StudentID , Session: \session, has been accepted as satisfactory in partial fulfillment of the requirements for the degree of \degree ~in \subject\hphantom -on 15$^{th}$ \thesisdate.
+  
+  
+  \begin{center}
+  	\textbf{{\large BOARD OF EXAMINERS}}\vspace*{1.0mm}
+  \end{center}
+  
+  \hspace*{4.0mm}\begin{minipage}[t]{0.9\textwidth}
+    \DTLforeach{BOE}{\ExaminerName=Column1,
+    				 \ExaminerRole=Column2,
+    				 \ExaminerDesignation=Column3,
+    				 \ExaminerStatus=Column4,
+    			     \ExaminerAddress=Column5}
+    			{
+                    \vspace*{10.0mm}
+    					\rule{5cm}{.3mm}\\
+    					\ExaminerName \hfill \ExaminerRole \\\ExaminerDesignation \hfill \ExaminerStatus \\\ExaminerAddress\bigskip
+                         
+                        
+    			}
+  \end{minipage}
+}
+
+
+
+
+% Thesis candidates' declaration
+\def\thesiscandidatesdeclaration{
+  \begingroup
+  \begin{center}
+    \textbf{{\Large\Large  Candidate's Declaration}}
+  \end{center}
+  \addcontentsline{toc}{chapter}{\textbf{Candidate's Declaration}}
+  \vspace*{\stretch{1}}
+    
+  This is to certify that the work presented in this thesis entitled, ``\thesistitle'', is the outcome of the research carried out by \author under the supervision of
+  \DTLforeach{Supervisor}{\SupervisorName=Column1,\SupervisorDesignation=Column2}{\SupervisorName}, {\SupervisorDesignation}, Department of Electrical and Electronic Engineering, Bangladesh University of Engineering and Technology (BUET), Dhaka-1205, Bangladesh.
+
+  \bigskip
+
+  It is also declared that neither this thesis nor any part thereof has been submitted anywhere else for the award of any degree, diploma, or other qualifications.
+  
+  \bigskip
+  \bigskip
+  \bigskip
+  Signature of the Candidate \\
+  \bigskip \\
+  \bigskip \\
+  
+    \begin{minipage}[t]{0.4\textwidth}
+      \hrule\medskip
+      \author\par
+      \StudentID
+    \end{minipage}\par
+ 
+  \vspace*{\stretch{2}}
+  \endgroup
+}
+
+
+
+% Thesis Dedication page
+\def\thesisdedication{
+	\begingroup
+	\begin{center}
+		\textbf{{\Large\Large Dedication}}
+	\end{center}
+	\addcontentsline{toc}{chapter}{\textbf{Dedication}}
+	\input{pages/dedication.tex}
+	\endgroup
+}
+
+
+
+% Inclusion of lof and lot in toc
+\RequirePackage[nottoc,notbib]{tocbibind}
+\RequirePackage{tocloft}
+\RequirePackage{etoolbox}
+\newtoggle{suppress@lof}
+\newtoggle{suppress@lot}
+\newtoggle{suppress@lo@}
+
+\def\suppresslistoffigures{\global\toggletrue{suppress@lof}}
+\def\suppresslistoftables{\global\toggletrue{suppress@lot}}
+\def\suppresslistofalgorithms{\global\toggletrue{suppress@lo@}}
+
+
+\def\listsandtoc{
+  % Table of contents
+  \tableofcontents
+
+  % List of figures, if not suppressed
+  \iftoggle{suppress@lof}{\relax}{\cleardoublepage\listoffigures}
+
+  % List of tables, if not suppressed
+  \iftoggle{suppress@lot}{\relax}{\cleardoublepage\listoftables}
+
+  % List of algorithms, if not suppressed
+  %\iftoggle{suppress@lo@}{\relax}{\cleardoublepage
+  %  \addcontentsline{toc}{chapter}{\listalgorithmname}
+  %  \listofalgorithms}
+}
+
+
+\def\thesisab{
+	%\glsaddall
+	\renewcommand{\headrulewidth}{0.0mm}
+\renewcommand{\footrulewidth}{0.0mm}
+	\printglossary[title={List of Abbreviations}]
+    \input{pages/abbr.tex}
+}
+
+% Thesis Acknowledgement page
+\def\thesisacknowledgement{
+	\begingroup
+	\begin{center}
+		\textbf{{\Huge Acknowledgement}}\\[60pt]
+	\end{center}
+	\addcontentsline{toc}{chapter}{\textbf{Acknowledgement}}
+	\input{pages/acknowledgement.tex}
+
+	\endgroup
+}
+
+\def\thesisabstract{
+	\begingroup
+	\begin{center}
+		\textbf{{\Huge Abstract}}\\[60pt]
+	\end{center}
+	\addcontentsline{toc}{chapter}{\textbf{Abstract}}
+		\input{pages/abstract.tex}
+	
+	\endgroup
+}
+
+
+% Starting materials
+\def\st@rtingm@teri@ls{
+  \thesistitlepage
+
+  \cleardoublepage
+  \pagenumbering{roman}
+  \setcounter{page}{2}
+  \thesiscertificationpage
+
+  \cleardoublepage
+  \thesiscandidatesdeclaration
+
+
+  \cleardoublepage
+  \thesisdedication
+
+
+  \cleardoublepage
+  \listsandtoc
+  
+  \thesisab
+  
+  \cleardoublepage
+  \thesisacknowledgement
+  
+  \cleardoublepage
+  \thesisabstract
+  \cleardoublepage
+
+}
+\usepackage{fancyhdr}
+
+
+% Starting materials
+\AtBeginDocument{\st@rtingm@teri@ls
+\fancyfoot[C]{\thepage}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.0mm}
+\renewcommand{\footrulewidth}{0.0mm}
+
+\pagenumbering{arabic}
+%\setcounter{page}{1}
+\pagestyle{fancy}
+\lhead{} %\leftmark
+\chead{}
+\rhead{}
+\cfoot{\thepage}
+\lfoot{}
+\rfoot{}
+\renewcommand{\headrule}{}
+
+ 
+}
+
+% For index creation
+\RequirePackage{imakeidx}
+
+
+\endinput

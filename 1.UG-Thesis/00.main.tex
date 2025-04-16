@@ -1,0 +1,65 @@
+\documentclass[12pt,notitlepage,oneside]{report}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{svg}
+\usepackage{buetugthesis}
+
+% Uncomment the following line if you need to write in Bangla
+% \usepackage{usebangla}
+
+% Uncomment any of the following lines should you need to
+% suppress the LOF, or LOT or LOA
+
+% \suppresslistoffigures 
+% \suppresslistoftables
+% \suppresslistofalgorithms
+
+% For index creation, comment this out if you do not want to create an
+% index
+\makeindex[intoc]
+
+\begin{document}
+
+% Edit as needed below this line
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Chapter-1 Introduction
+\input{01.introduction.tex}
+
+% Citation examples
+\input{02.literature_review.tex}
+
+% Another chapter
+\input{03.methodology.tex}
+
+% Chapter showing example of index creation
+\input{04.Results.tex} 
+
+% Bangla example, uncomment if you need this
+% \input {banglaexample.tex}
+
+% Chapter with math in ttile
+\input{05.Evaluation.tex}
+
+% Bibliographies and appendices
+
+\input{A0.References.tex}
+
+% Index, comment this out if you do not want to create an index
+\printindex
+
+\appendix
+% Algorithms
+%\input{A1.algorithms.tex}
+
+% Codes
+\input{A2.codes.tex}
+
+
+
+
+
+\end{document}
+
+
+\end{document}

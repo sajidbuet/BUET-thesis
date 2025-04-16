@@ -1,0 +1,8 @@
+% Name, Role, Designation, Status, Address
+Dr. SUPERVISOR NAME, Chairman, Assistant Professor, (Supervisor), "Dept. of EEE, BUET, Dhaka", 
+Dr. HEAD NAME, Member, Professor and Head, (Ex-Officio), "Dept. of EEE, BUET, Dhaka",
+Dr. MEMBER NAME, Member, Professor, , "Dept. of EEE, BUET, Dhaka",
+Dr. MEMBER NAME, Member, Professor, , "Dept. of EEE, BUET, Dhaka",
+Dr. EXTERNAL NAME, Member, Professor, (External), "Dept. of XXX, AFFILIATION, CITY",
+
+

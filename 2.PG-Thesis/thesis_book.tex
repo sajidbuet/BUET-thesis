@@ -1,0 +1,77 @@
+\documentclass[12pt,notitlepage,oneside]{report}
+\setcounter{secnumdepth}{3}
+\usepackage{buet_msc_thesis}
+\usepackage{lipsum}
+\usepackage{svg}
+%\usepackage[acronym, toc]{glossaries}
+
+% Uncomment any of the following lines should you need to
+% suppress the LOF, or LOT or LOA
+
+% \suppresslistoffigures 
+% \suppresslistoftables
+% \suppresslistofalgorithms
+
+%parameters for thesis
+
+% Please make sure that the title is EXACTLY same
+% as the one passed in the CASR meeting.
+% Please ask your supervisor for a copy of the 
+% CASR meeting resolutioin before typing below
+\def\thesistitle{Put the Title of Your Thesis Here}
+% the Date below is the date of the final examination (month and year).
+\def\thesisdate{September, 2020}
+\def\author{NAME OF THE CANDIDATE}
+\def\StudentID{042106XYZA}
+\def\degree{Master of Science}
+\def\department{Department of Electrical and Electronic Engineering}
+\def\subject{Electrical and Electronic Engineering}
+\def\session{April 2021}
+\def\deptaffiliation{Department of EEE, BUET, Dhaka}
+
+% For index creation, comment this out if you do not want to create an
+% index
+\makeindex[intoc]
+\patchcmd{\titlepage}{empty}{fancy}{}{}
+\patchcmd{\chapter}{plain}{fancy}{}{}
+
+\begin{document}
+
+
+% Edit as needed below this line
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Chapter-1
+
+\input{chapters/introduction.tex}
+
+% Chapter-2
+\input{chapters/literature_review.tex}
+
+% Chapter-3
+\input{chapters/background.tex}
+
+% Chapter-4
+\input{chapters/methodology.tex}
+
+% Chapter-5
+\input{chapters/result_discussion.tex}
+
+% Chapter-6
+\input{chapters/conclusion.tex}
+
+
+% Chapter showing example of index creation
+%\input{indexcreation.tex}
+
+
+% Bibliographies and appendices
+\input{pages/bibliography.tex}
+
+% Index, comment this out if you do not want to create an index
+\printindex
+
+\appendix
+% Algorithms
+%\input{chapters/algorithms.tex}
+
+\end{document}

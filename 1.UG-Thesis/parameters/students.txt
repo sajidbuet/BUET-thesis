@@ -1,0 +1,7 @@
+% Put in this file the names of the thesis group members.
+% One name per line, follow the name with the student number, 
+% separated by a comma (,)
+First Thesis Student Name, 201906xxx
+Second Thesis Student Name, 201906yyy
+Third Thesis Student Name, 201906zzz
+
