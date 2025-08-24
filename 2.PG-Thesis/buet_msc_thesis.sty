@@ -61,7 +61,7 @@
   \thispagestyle{empty}
   \begin{center}
     \vspace*{\stretch{2}}
-    \textbf{\Large\textsc{\thesistitle}}
+    \textbf{\Large{\thesistitle}}
 
     \vspace*{\stretch{5}}
     {\large by}\\
@@ -81,7 +81,7 @@
 
     \bigskip
     \vspace*{\stretch{1}}
-    \thesisdate
+    \thesisdefensemonthyear
   \end{center}
 }
 
@@ -92,7 +92,7 @@
    \addcontentsline{toc}{chapter}{\textbf{Certification}}
    
   The thesis titled, \textbf{\lq\lq\thesistitle\rq\rq}, submitted by
- \textbf{\author}, Roll No.: \StudentID , Session: \session, has been accepted as satisfactory in partial fulfillment of the requirements for the degree of \degree ~in \subject\hphantom -on 15$^{th}$ \thesisdate.
+ \textbf{\author}, Roll No.: \StudentID , Session  \session, has been accepted as satisfactory in partial fulfillment of the requirements for the degree of \degree ~in \subject\hphantom -on \thesisdefenseday ~ \thesisdefensemonthyear.
   
   
   \begin{center}
@@ -178,21 +178,69 @@
 \def\suppresslistoftables{\global\toggletrue{suppress@lot}}
 \def\suppresslistofalgorithms{\global\toggletrue{suppress@lo@}}
 
+% ===== ToC / LoF / LoT title font, case, alignment =====
+% নামগুলোকে uppercase করি
+\renewcommand{\contentsname}{\MakeUppercase{Contents}}
+\renewcommand{\listfigurename}{\MakeUppercase{List of Figures}}
+\renewcommand{\listtablename}{\MakeUppercase{List of Tables}}
+
+% শিরোনামের ফন্ট: 14pt, bold
+\renewcommand{\cfttoctitlefont}{\bfseries\fontsize{14pt}{16pt}\selectfont}
+\renewcommand{\cftloftitlefont}{\bfseries\fontsize{14pt}{16pt}\selectfont}
+\renewcommand{\cftlottitlefont}{\bfseries\fontsize{14pt}{16pt}\selectfont}
+
+% শিরোনামকে সেন্টার করা
+% (tocloft >= v2.3 হলে ...titlealign আছে; না থাকলে after...title দিয়ে কাজ হবে)
+\providecommand{\cfttoctitlealign}{}
+\providecommand{\cftloftitlealign}{}
+\providecommand{\cftlottitlealign}{}
+\renewcommand{\cfttoctitlealign}{\hfill}
+\renewcommand{\cftloftitlealign}{\hfill}
+\renewcommand{\cftlottitlealign}{\hfill}
+\renewcommand{\cftaftertoctitle}{\hfill}
+\renewcommand{\cftafterloftitle}{\hfill}
+\renewcommand{\cftafterlottitle}{\hfill}
+
+% শিরোনামের নিচে স্পেস (ইচ্ছেমতো টিউন করতে পারেন)
+\setlength{\cftbeforetoctitleskip}{0pt}
+\setlength{\cftaftertoctitleskip}{25pt}
+\setlength{\cftbeforeloftitleskip}{0pt}
+\setlength{\cftafterloftitleskip}{25pt}
+\setlength{\cftbeforelottitleskip}{0pt}
+\setlength{\cftafterlottitleskip}{25pt}
 
 \def\listsandtoc{
   % Table of contents
   \tableofcontents
 
   % List of figures, if not suppressed
-  \iftoggle{suppress@lof}{\relax}{\cleardoublepage\listoffigures}
+  \iftoggle{suppress@lof}{\relax}{
+    \cleardoublepage
+    {%
+      % locally uppercase for heading
+      \renewcommand{\listfigurename}{{List of Figures}}%
+      \listoffigures
+    }%
+  }
 
   % List of tables, if not suppressed
-  \iftoggle{suppress@lot}{\relax}{\cleardoublepage\listoftables}
+  \iftoggle{suppress@lot}{\relax}{
+    \cleardoublepage
+    {%
+      % locally uppercase for heading
+      \renewcommand{\listtablename}{{List of Tables}}%
+      \listoftables
+    }%
+  }
 
   % List of algorithms, if not suppressed
   %\iftoggle{suppress@lo@}{\relax}{\cleardoublepage
-  %  \addcontentsline{toc}{chapter}{\listalgorithmname}
-  %  \listofalgorithms}
+  %  {%
+  %    \renewcommand{\listalgorithmname}{\MakeUppercase{List of Algorithms}}%
+  %    \addcontentsline{toc}{chapter}{\listalgorithmname}
+  %    \listofalgorithms
+  %  }%
+  %}
 }
 
 
@@ -208,8 +256,8 @@
 \def\thesisacknowledgement{
 	\begingroup
 	\begin{center}
-		\textbf{{\Huge Acknowledgement}}\\[60pt]
-	\end{center}
+  \textbf{\MakeUppercase{\fontsize{14pt}{16pt}\selectfont Acknowledgement}}\\[60pt]
+\end{center}
 	\addcontentsline{toc}{chapter}{\textbf{Acknowledgement}}
 	\input{pages/acknowledgement.tex}
 
@@ -218,9 +266,9 @@
 
 \def\thesisabstract{
 	\begingroup
-	\begin{center}
-		\textbf{{\Huge Abstract}}\\[60pt]
-	\end{center}
+\begin{center}
+  \textbf{\MakeUppercase{\fontsize{14pt}{16pt}\selectfont Abstract}}\\[60pt]
+\end{center}
 	\addcontentsline{toc}{chapter}{\textbf{Abstract}}
 		\input{pages/abstract.tex}
 	
@@ -285,5 +333,40 @@
 % For index creation
 \RequirePackage{imakeidx}
 
+% Chapter title formatting
+\RequirePackage{titlesec}
+
+
+% ---- Chapter ----
+\titleformat{\chapter}[block]
+  {\bfseries\fontsize{14pt}{16pt}\selectfont\filcenter} % 14pt bold, centered
+  {\thechapter.}                                       % number with dot
+  {0.5em}                                              % space between number and title
+  {\MakeUppercase}                                     % all caps
+
+\titlespacing*{\chapter}{0pt}{-5pt}{25pt}              % spacing before/after
+
+% ---- Unnumbered Chapter (e.g., Abstract, Contents, Acknowledgement) ----
+\titleformat{name=\chapter,numberless}[block]
+  {\bfseries\fontsize{14pt}{16pt}\selectfont\filcenter} % 14pt bold, centered
+  {}                                                    % no number
+  {0pt}
+  {\MakeUppercase}                                      % all caps text
+
+\titlespacing*{name=\chapter,numberless}{0pt}{-5pt}{25pt}
+
+% ---- Section ----
+\titleformat{\section}[block]
+  {\bfseries\fontsize{12pt}{14pt}\selectfont}          % 12pt bold
+  {\thesection}                                        % number
+  {0.5em}
+  {}
+
+% ---- Subsection ----
+\titleformat{\subsection}[block]
+  {\bfseries\fontsize{12pt}{14pt}\selectfont}          % 12pt bold
+  {\thesubsection}                                     % number
+  {0.5em}
+  {}
 
 \endinput

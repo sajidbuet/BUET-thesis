@@ -13,8 +13,11 @@
 \RequirePackage{url}
 \RequirePackage{listings}
 \RequirePackage{xcolor}
+
 \definecolor{BUETColor}{rgb}{0.67,0.12,0.15}
 \RequirePackage[final, colorlinks, linkcolor=BUETColor, citecolor=BUETColor, urlcolor=BUETColor]{hyperref}
+
+
 % AC1F25
 
 % Prevent math from being upcased
@@ -81,7 +84,12 @@
 
 % Thesis parameters
 \def\thesistitle{\input{parameters/thesistitle.txt}\unskip}
-\def\thesisdate{\input{parameters/thesisdate.txt}\unskip}
+\def\ThesisMonth{\input{parameters/thesismonth.txt}\unskip}
+\def\ThesisYear{\input{parameters/thesisyear.txt}\unskip}
+
+\def\thesisdate{\ThesisMonth ~ \ThesisYear}
+
+
 \def\thesisterm{\input{parameters/thesisterm.txt}\unskip}
 
 % Thesis title page 
@@ -271,14 +279,17 @@
 % Fancy page style
 \RequirePackage{fancyhdr}
 \fancyhf{}
-\renewcommand{\headrulewidth}{0.250mm}
+\renewcommand{\headrulewidth}{0.00mm}
 \renewcommand{\footrulewidth}{0.0mm}
 \fancyheadoffset[R]{0.075\textwidth}
-\fancyhead[L]{\slshape \rightmark}
-\fancyhead[R]{\textbf{\thepage}}
+%\fancyhead[L]{\slshape \rightmark}
+%\fancyhead[R]{\textbf{\thepage}}
 \setlength{\headheight}{14.49998pt}
+\fancyfoot[C]{\thepage}  
+
 % Starting materials
-\AtBeginDocument{\st@rtingm@teri@ls
+\AtBeginDocument{
+  \st@rtingm@teri@ls
   \cleardoublepage
   \pagestyle{fancy}
   \pagenumbering{arabic}
@@ -292,6 +303,51 @@
 \RequirePackage[nofancy,notoday]{rcsinfo}
 \rcsInfo $Id: buetugthesis.sty,v 1.0 2023/01/16 13:23:11 sajid Exp $
 \RequirePackage{datetime}
+
+% Automatic abbreviation: convert full names like "Sajid Muhaimin Choudhury" -> "SM Choudhury"
+% Requires: 
+\RequirePackage{xstring}
+\RequirePackage{datatool}
+
+
+% Macro to abbreviate a full name into initials + last name
+\newcommand{\NameToInitials}[1]{%
+% Use xstring to split into words
+\StrCount{#1}{ }[\NameParts] % count spaces = number of parts - 1
+\IfEq{\NameParts}{0}{#1}{% if only one part, return as is
+% Otherwise, loop over each word
+\def\Initials{}%
+\StrBefore[1]{#1}{ }[\FirstWord]% get first word
+\StrBehind[1]{#1}{ }[\Remainder]% everything after first space
+% Get initials of all but last word
+\StrCut{\Remainder}{ }{\SecondWord}{\Rest}%
+\edef\Initials{\expandafter\@gobble\FirstWord}% dummy
+% Actually: take first letters of all but last
+}%
+}
+
+
+% Simpler approach: assume 3-part name (First Middle Last)
+\newcommand{\ThreePartName}[3]{#1 #2 #3}
+
+
+% Example using xstring to handle arbitrary names
+\newcommand{\AbbrevStudent}[1]{%
+\StrBefore[1]{#1}{ }[\First]% first name
+\StrBehind[1]{#1}{ }[\Rest]% remainder
+\StrBefore[1]{\Rest}{ }[\Middle]% middle (if any)
+\StrBehind[1]{\Rest}{ }[\Last]% last name
+% If there is a middle, print FirstInitial MiddleInitial Last
+% Else, just FirstInitial Last
+\IfStrEq{\Middle}{\Rest}{% means only two parts
+\StrChar{\First}{1}[\FInit]
+\textbf{\FInit\ \Rest}%
+}{% else three parts
+\StrChar{\First}{1}[\FInit]
+\StrChar{\Middle}{1}[\MInit]
+\textbf{\FInit\MInit\ \Last}%
+}%
+}
 
 \AtEndDocument{%
   \clearpage
@@ -319,61 +375,119 @@
   \endgroup
   
   \clearpage
+% Requires \usepackage{graphicx}
 \begin{titlepage}
+% Reduce top and bottom margins for this page only
+\newgeometry{top=1.0cm,bottom=1.0cm,left=8.5cm,right=8.5cm}
     \centering
-         
-    % Top horizontal lines
+\vspace{-2.1cm}
+    % === Top horizontal lines ===
     \hrule
     \vspace{0.1cm}
     \hrule
-    
-    \vspace{0.25cm} % Vertical space
-    
-    % B.Sc.//Engg//BUET
+
+    \vspace{0.25cm}
+
+    % Degree / Dept / Univ block
     \textbf{B.Sc.\\Engg.\\EEE\\BUET}
-    \vspace{0.25cm} % Vertical space
-      \hrule
+
+    \vspace{0.25cm}
+    \hrule
     \vspace{0.1cm}
     \hrule
-    \vspace{1.0cm} % Vertical space
-    
-    % Title of the thesis (side ways)
-    \rotatebox{270}{\parbox[c][8cm][c]{12cm}{\centering \textbf{\begin{tabular}{@{}c@{}}Your Short Thesis Title\end{tabular}}}}
 
-  
- 
-    \vspace{2.0cm} % Vertical space
-    
-    % Author names
-        \rotatebox{270}{\parbox[c][4cm][c]{2cm}{\centering \textbf{\begin{tabular}{@{}c@{}}
-            \textbf{Author Name 1} \\
-    \textbf{Author Name 2}
-        \end{tabular}}}}
-        
+    \vspace{0.5cm}
 
-    
-    \vspace{1.5cm} % Vertical space
-    
-    % Bottom horizontal lines
+    % ===============================
+    % Rotated TITLE with WRAPPING
+    % ===============================
+    % Choose a width relative to the page height so the rotated box wraps neatly.
+    % You can tune 0.72\textheight if needed.
+    \newlength{\TitleBoxW}
+    \setlength{\TitleBoxW}{0.55\textheight}
+
+    % The parbox width controls wrapping; 'origin=c' keeps it centered on rotation.
+    \rotatebox[origin=c]{270}{%
+      \parbox[t]{\TitleBoxW}{\centering\bfseries\fontsize{12}{14}\selectfont
+        \setlength{\parindent}{0pt}%
+        \thesistitle
+      }%
+    }
+
+    \vspace{0.0cm}
+
+    % ===============================
+    % Rotated AUTHORS with WRAPPING
+    % ===============================
+    \newlength{\AuthorBoxW}
+    \setlength{\AuthorBoxW}{0.20\textheight}
+
+    \rotatebox[origin=c]{270}{%
+      \parbox[t]{\AuthorBoxW}{\centering\bfseries\fontsize{12}{6}\selectfont
+          \begin{enumerate}
+    \DTLforeach{ThesisStudents}{\StudentName=Column1}{\item[]\textbf{\AbbrevStudent{\StudentName}}} \\
+  \end{enumerate}
+      }%
+    }
+
+    \vspace{0.2cm}
+
+    % === Bottom horizontal lines ===
     \vfill
     \hrule
     \vspace{0.1cm}
     \hrule
-    
-    \vspace{0.25cm} % Vertical space
-    
-    % May 2023
-        \textbf{May\\2023}
-    \vspace{0.25cm} % Vertical space
+
+    \vspace{0.25cm}
+
+    % Month / Year (stacked to match style)
+    \textbf{\ThesisMonth \\ \ThesisYear}
+
+    \vspace{0.35cm}
     \hrule
     \vspace{0.1cm}
     \hrule
-    \vfill % Empty space at the bottom of the page
-    
+
+    \vfill
 \end{titlepage}
   
   }
 
+% For index creation
+\RequirePackage{imakeidx}
 
+% Chapter title formatting
+\RequirePackage{titlesec}
+% ---- Chapter ----
+\titleformat{\chapter}[block]
+  {\bfseries\fontsize{14pt}{16pt}\selectfont\filcenter} % 14pt bold, centered
+  {\thechapter.}                                       % number with dot
+  {0.5em}                                              % space between number and title
+  {\MakeUppercase}                                     % all caps
+
+\titlespacing*{\chapter}{0pt}{-5pt}{25pt}              % spacing before/after
+
+% ---- Unnumbered Chapter (e.g., Abstract, Contents, Acknowledgement) ----
+\titleformat{name=\chapter,numberless}[block]
+  {\bfseries\fontsize{14pt}{16pt}\selectfont\filcenter} % 14pt bold, centered
+  {}                                                    % no number
+  {0pt}
+  {\MakeUppercase}                                      % all caps text
+
+\titlespacing*{name=\chapter,numberless}{0pt}{-5pt}{25pt}
+
+% ---- Section ----
+\titleformat{\section}[block]
+  {\bfseries\fontsize{12pt}{14pt}\selectfont}          % 12pt bold
+  {\thesection}                                        % number
+  {0.5em}
+  {}
+
+% ---- Subsection ----
+\titleformat{\subsection}[block]
+  {\bfseries\fontsize{12pt}{14pt}\selectfont}          % 12pt bold
+  {\thesubsection}                                     % number
+  {0.5em}
+  {}
 
 \endinput

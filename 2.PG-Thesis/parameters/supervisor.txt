@@ -1,2 +1,2 @@
 % Supervisor Name, Supervisor Designation
-Dr. FIRST LAST, Assistant Professor
+Dr. First Last, Assistant Professor
