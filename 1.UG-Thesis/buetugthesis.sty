@@ -13,10 +13,19 @@
 \RequirePackage{url}
 \RequirePackage{listings}
 \RequirePackage{xcolor}
-
+\RequirePackage{relsize} % for better small caps sizing
 \definecolor{BUETColor}{rgb}{0.67,0.12,0.15}
 \RequirePackage[final, colorlinks, linkcolor=BUETColor, citecolor=BUETColor, urlcolor=BUETColor]{hyperref}
+% For index creation
+\RequirePackage{imakeidx}
 
+% Version information at the end
+\RequirePackage[nofancy,notoday]{rcsinfo}
+\rcsInfo $Id: buetugthesis.sty,v 2.0 2025/06/09 13:23:11 sajid Exp $
+\RequirePackage{datetime}
+
+\RequirePackage{xstring}
+\RequirePackage{datatool}
 
 % AC1F25
 
@@ -53,6 +62,7 @@
   \lstset{style=mystyle, language=Python}
   
 \newcommand{\sectionbreak}{\phantomsection}
+
 
 % Definition macros
 \def\EEE{Department of Electrical and Electronic Engineering}
@@ -296,18 +306,10 @@
   \setcounter{page}{1}
 }
 
-% For index creation
-\RequirePackage{imakeidx}
-
-% Version information at the end
-\RequirePackage[nofancy,notoday]{rcsinfo}
-\rcsInfo $Id: buetugthesis.sty,v 1.0 2023/01/16 13:23:11 sajid Exp $
-\RequirePackage{datetime}
 
 % Automatic abbreviation: convert full names like "Sajid Muhaimin Choudhury" -> "SM Choudhury"
 % Requires: 
-\RequirePackage{xstring}
-\RequirePackage{datatool}
+
 
 
 % Macro to abbreviate a full name into initials + last name
@@ -441,7 +443,7 @@
     \vspace{0.25cm}
 
     % Month / Year (stacked to match style)
-    \textbf{\ThesisMonth \\ \ThesisYear}
+    \textbf{\ThesisMonth \\ \ThesisYear }
 
     \vspace{0.35cm}
     \hrule

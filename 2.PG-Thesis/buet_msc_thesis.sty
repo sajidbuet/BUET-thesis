@@ -21,6 +21,21 @@
 % Prevent math from being upcased
 % http://tex.stackexchange.com/questions/46525/preventing-makeuppercase-from-affecting-mathematics
 \RequirePackage{textcase}
+
+% For index creation
+\RequirePackage{imakeidx}
+
+% Version information at the end
+\RequirePackage[nofancy,notoday]{rcsinfo}
+\rcsInfo $Id: buetugthesis.sty,v 2.0 2025/06/09 13:23:11 sajid Exp $
+\RequirePackage{datetime}
+
+% Automatic abbreviation: convert full names like "Sajid Muhaimin Choudhury" -> "SM Choudhury"
+% Requires: 
+\RequirePackage{xstring}
+\RequirePackage{datatool}
+
+
 \makeglossaries
   
 % Definition macros
@@ -368,5 +383,107 @@
   {\thesubsection}                                     % number
   {0.5em}
   {}
+
+\AtEndDocument{%
+  \clearpage
+  \pagestyle{plain}
+  
+  \begingroup
+  
+  \flushright
+
+  \vspace*{0.0mm}
+  \vfill\vfill\vfill\vfill\vfill
+  \sffamily
+
+  Generated using Undegraduate Thesis \LaTeX\xspace Template,
+  Version~\rcsInfoRevision. \EEE, \buet, Dhaka, Bangladesh.
+
+  \bigskip
+
+  \settimeformat{ampmtime}
+
+  This thesis was generated on~\today\xspace at~\currenttime.
+
+  \vfill
+
+  \endgroup
+  
+  \clearpage
+% Requires \usepackage{graphicx}
+\begin{titlepage}
+% Reduce top and bottom margins for this page only
+\newgeometry{top=1.0cm,bottom=1.0cm,left=8.5cm,right=8.5cm}
+    \centering
+\vspace{-2.1cm}
+    % === Top horizontal lines ===
+    \hrule
+    \vspace{0.1cm}
+    \hrule
+
+    \vspace{0.25cm}
+
+    % Degree / Dept / Univ block
+    \textbf{M.Sc.\\Engg. \\EEE\\BUET}
+
+    \vspace{0.25cm}
+    \hrule
+    \vspace{0.1cm}
+    \hrule
+
+    \vspace{0.5cm}
+
+    % ===============================
+    % Rotated TITLE with WRAPPING
+    % ===============================
+    % Choose a width relative to the page height so the rotated box wraps neatly.
+    % You can tune 0.72\textheight if needed.
+    \newlength{\TitleBoxW}
+    \setlength{\TitleBoxW}{0.55\textheight}
+
+    % The parbox width controls wrapping; 'origin=c' keeps it centered on rotation.
+    \rotatebox[origin=c]{270}{%
+      \parbox[t]{\TitleBoxW}{\centering\bfseries\fontsize{12}{14}\selectfont
+        \setlength{\parindent}{0pt}%
+        \thesistitle
+      }%
+    }
+
+    \vspace{0.0cm}
+
+    % ===============================
+    % Rotated AUTHORS with WRAPPING
+    % ===============================
+    \newlength{\AuthorBoxW}
+    \setlength{\AuthorBoxW}{0.20\textheight}
+
+    \rotatebox[origin=c]{270}{%
+      \parbox[t]{\AuthorBoxW}{\centering\bfseries\fontsize{12}{6}\selectfont
+         \author
+      }%
+    }
+
+    \vspace{0.2cm}
+
+    % === Bottom horizontal lines ===
+    \vfill
+    \hrule
+    \vspace{0.1cm}
+    \hrule
+
+    \vspace{0.25cm}
+
+    % Month / Year (stacked to match style)
+    \textbf{ \StrLeft{\thesisdefensemonth}{3} \\ \thesisdefenseyear}
+
+    \vspace{0.35cm}
+    \hrule
+    \vspace{0.1cm}
+    \hrule
+
+    \vfill
+\end{titlepage}
+  
+  }
 
 \endinput
