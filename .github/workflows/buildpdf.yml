@@ -1,0 +1,71 @@
+name: Build and Release LaTeX PDFs
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        thesis:
+          - "1.UG-Thesis/buetcseugthesis.tex"
+          - "2.PG-Thesis/buet_pg_thesis.tex"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up LaTeX
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: ${{ matrix.thesis }}
+          latexmk_use_xelatex: true
+
+      - name: Rename PDFs
+        run: |
+          mkdir -p output
+          for file in ${{ matrix.thesis }}; do
+            base=$(basename "$file" .tex)
+            dir=$(dirname "$file" | cut -d'/' -f1)
+            cp "$dir/$base.pdf" "output/${dir}_${base}.pdf"
+          done
+
+      - name: Upload PDFs as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Thesis-PDFs
+          path: output/*.pdf
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: Thesis-PDFs
+          path: ./release_pdfs
+
+      - name: Delete existing "latest" release
+        uses: dev-drprasad/delete-tag-and-release@v1.0
+        with:
+          tag_name: latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create/Update "latest" release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: latest
+          release_name: "Latest Thesis PDFs"
+          body: |
+            This release always contains the most recent compiled PDFs of the BUET thesis templates:
+            - UG Thesis
+            - PG Thesis
+          files: ./release_pdfs/*.pdf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
