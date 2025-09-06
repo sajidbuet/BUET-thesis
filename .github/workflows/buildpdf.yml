@@ -10,8 +10,8 @@ jobs:
     strategy:
       matrix:
         thesis:
-          - "1.UG-Thesis/buetcseugthesis.tex"
-          - "2.PG-Thesis/buet_pg_thesis.tex"
+          - "1.UG-Thesis/00.main.tex"
+          - "2.PG-Thesis/thesis_book.tex"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
